@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getSessionFromCookies } from "../../../../../lib/auth";
-import { db } from "../../../../../lib/firebaseAdmin";
+import { getSessionFromCookies } from "@/lib/auth";
+import { db } from "@/lib/firebaseAdmin";
 
 export async function GET(_: Request, ctx: { params: { id: string } }) {
   const s = getSessionFromCookies();

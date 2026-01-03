@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getSessionFromCookies } from "../../../../../../lib/auth";
-import { finalizeCampaignIfNeeded } from "../../../../../../lib/campaign";
+import { getSessionFromCookies } from "@/lib/auth";
+import { finalizeCampaignIfNeeded } from "@/lib/campaign";
 
 export async function POST(_: Request, ctx: { params: { id: string } }) {
   const s = getSessionFromCookies();
