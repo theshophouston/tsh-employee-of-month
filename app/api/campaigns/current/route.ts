@@ -10,7 +10,7 @@ function addMonthsUTC(date: Date, delta: number) {
 }
 
 export async function GET() {
-  const s = getSessionFromCookies();
+  const s = await getSessionFromCookies();
   if (!s) return NextResponse.json({ error: "Not logged in" }, { status: 401 });
 
   const now = new Date();

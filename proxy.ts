@@ -4,7 +4,7 @@ import { getSessionFromRequest } from "./lib/auth";
 const PROTECTED_PREFIXES = ["/vote", "/admin", "/change-password"];
 const ADMIN_PREFIX = "/admin";
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const needsAuth = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));

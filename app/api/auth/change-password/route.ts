@@ -3,7 +3,7 @@ import { getSessionFromCookies } from "../../../../lib/auth";
 import { db } from "../../../../lib/firebaseAdmin";
 
 export async function POST(req: Request) {
-  const s = getSessionFromCookies();
+  const s = await getSessionFromCookies();
   if (!s) return NextResponse.json({ error: "Not logged in" }, { status: 401 });
 
   const { newPassword } = await req.json();

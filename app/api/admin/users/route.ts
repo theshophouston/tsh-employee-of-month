@@ -9,7 +9,7 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const isPublic = url.searchParams.get("public") === "1";
 
-  const s = getSessionFromCookies();
+  const s = await getSessionFromCookies();
   if (!s) return NextResponse.json({ error: "Not logged in" }, { status: 401 });
 
   if (!isPublic && s.role !== "admin") {
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const s = getSessionFromCookies();
+  const s = await getSessionFromCookies();
   if (!s) return NextResponse.json({ error: "Not logged in" }, { status: 401 });
   if (s.role !== "admin") return NextResponse.json({ error: "Admin only" }, { status: 403 });
 

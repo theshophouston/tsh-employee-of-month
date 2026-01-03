@@ -4,7 +4,7 @@ import { db, FieldValue } from "../../../lib/firebaseAdmin";
 import { campaignIdFor, ensureCampaign } from "../../../lib/campaign";
 
 export async function POST(req: Request) {
-  const s = getSessionFromCookies();
+  const s = await getSessionFromCookies();
   if (!s) return NextResponse.json({ error: "Not logged in" }, { status: 401 });
 
   const { candidateUserId, reason } = await req.json();
