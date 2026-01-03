@@ -40,7 +40,7 @@ export default async function HomePage() {
     <div className="card">
       <h1>TSH Employee of the Month</h1>
       <p>
-        Vote once per month, do not vote for yourself, no live standings, we are not running a reality show.
+        Vote once per month. You can not vote for yourself.
       </p>
 
       <div className="row">
