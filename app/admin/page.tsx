@@ -55,6 +55,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     refreshCampaigns()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -92,7 +93,7 @@ export default function AdminPage() {
     const ok = confirm("Reset this month, delete all votes, remove winners, and reopen voting?")
     if (!ok) return
 
-    setBusy("reset")
+    setBusy("resetMonth")
     setMsg("")
     try {
       const res = await fetch("/api/admin/campaigns/current/reset", { method: "POST" })
@@ -135,6 +136,33 @@ export default function AdminPage() {
     }
   }
 
+  async function factoryResetDatabase() {
+    const typed = prompt("Type RESET to factory reset the database. This will delete all campaigns and votes.")
+    if (typed !== "RESET") return
+
+    setBusy("factoryReset")
+    setMsg("")
+    try {
+      const res = await fetch("/api/admin/reset-database", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: "RESET" }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setMsg(data?.error ?? "Factory reset failed")
+        return
+      }
+      setMsg(
+        `Factory reset complete. Campaigns deleted: ${data.campaignsDeleted}, votes deleted: ${data.votesDeleted}, users reset: ${data.usersReset}.`
+      )
+      await refreshCampaigns()
+      if (currentCampaign?.id) await refreshLiveVotes(currentCampaign.id)
+    } finally {
+      setBusy(null)
+    }
+  }
+
   const canResetMonth =
     !!currentCampaign &&
     currentCampaign.status === "finalized" &&
@@ -169,7 +197,9 @@ export default function AdminPage() {
         <button
           onClick={resetCurrentMonthIfForced}
           disabled={busy !== null || !canResetMonth}
-          title={canResetMonth ? "Reset the month back to open voting" : "Reset is only available if the month was force finalized"}
+          title={
+            canResetMonth ? "Reset the month back to open voting" : "Reset is only available if the month was force finalized"
+          }
           style={{
             padding: "10px 12px",
             borderRadius: 10,
@@ -178,7 +208,20 @@ export default function AdminPage() {
             cursor: busy || !canResetMonth ? "not-allowed" : "pointer",
           }}
         >
-          {busy === "reset" ? "Resetting…" : "Reset Current Month (Only if Force Finalized)"}
+          {busy === "resetMonth" ? "Resetting…" : "Reset Current Month (Only if Force Finalized)"}
+        </button>
+
+        <button
+          onClick={factoryResetDatabase}
+          disabled={busy !== null}
+          style={{
+            padding: "10px 12px",
+            borderRadius: 10,
+            border: "1px solid #111",
+            cursor: busy ? "not-allowed" : "pointer",
+          }}
+        >
+          {busy === "factoryReset" ? "Resetting…" : "Factory Reset Database"}
         </button>
 
         <button
