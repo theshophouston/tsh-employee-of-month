@@ -48,7 +48,7 @@ export default function VotePage() {
     });
     const data = await res.json();
     if (!res.ok) setError(data.error || "Failed to vote");
-    else setStatus("Vote cast, your guilt is now documented.");
+    else setStatus("Vote submitted.");
   }
 
   async function logout() {
